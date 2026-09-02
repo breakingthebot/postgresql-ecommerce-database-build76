@@ -12,14 +12,14 @@ This document logs every incremental engineering iteration and git commit pushed
 
 | Iteration | Git Commit | Version | Focus / Summary | Tests Passed | Full Summary Archive |
 | :---: | :---: | :---: | :--- | :---: | :--- |
-| **01** | *(pending)* | `v1.0.0` | **Foundation & Core Relational E-Commerce Schema**<br>Normalized 12-table architecture (users, addresses, categories, brands, products, variants with JSONB, inventory reservations, coupons, balanced orders, snapshotted items, status audit, reviews), PL/pgSQL triggers, analytical views, and Python CLI suite (`pg-ecommerce`). | 11 / 11 | [Iteration 01 Summary](docs/summaries/iteration_01_summary.md) |
+| **01** | [`293f217`](https://github.com/breakingthebot/postgresql-ecommerce-database-build76/commit/293f217) | `v1.0.0` | **Foundation & Core Relational E-Commerce Schema**<br>Normalized 12-table architecture (users, addresses, categories, brands, products, variants with JSONB, inventory reservations, coupons, balanced orders, snapshotted items, status audit, reviews), PL/pgSQL triggers, analytical views, and Python CLI suite (`pg-ecommerce`). | 11 / 11 | [Iteration 01 Summary](docs/summaries/iteration_01_summary.md) |
 
 ---
 
 ## Chronological Iteration Entries
 
 ### Iteration 1: Foundation & Core Relational E-Commerce Schema
-- **Git Commit**: *(pending)*
+- **Git Commit**: [`293f217`](https://github.com/breakingthebot/postgresql-ecommerce-database-build76/commit/293f217)
 - **Tag / Version**: `v1.0.0`
 - **Date**: 2026-09-02
 - **Plain English Summary**:
