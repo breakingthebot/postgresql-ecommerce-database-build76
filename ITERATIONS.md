@@ -14,7 +14,7 @@ This document logs every incremental engineering iteration and git commit pushed
 | :---: | :---: | :---: | :--- | :---: | :--- |
 | **01** | [`293f217`](https://github.com/breakingthebot/postgresql-ecommerce-database-build76/commit/293f217) | `v1.0.0` | **Foundation & Core Relational E-Commerce Schema**<br>Normalized 12-table architecture (users, addresses, categories, brands, products, variants with JSONB, inventory reservations, coupons, balanced orders, snapshotted items, status audit, reviews), PL/pgSQL triggers, analytical views, and Python CLI suite (`pg-ecommerce`). | 11 / 11 | [Iteration 01 Summary](docs/summaries/iteration_01_summary.md) |
 | **02** | [`07a98fa`](https://github.com/breakingthebot/postgresql-ecommerce-database-build76/commit/07a98fa) | `v1.1.0` | **Deterministic Synthetic Data Generator & Seeder**<br>Curated and synthetic data generation (`pg-ecommerce seed`), DAG topological generation, JSONB attributes, constraint verification (`chk_order_total_balance`, `chk_inventory_reserved_lte_hand`), and analytical view validation. | 16 / 16 | [Iteration 02 Summary](docs/summaries/iteration_02_summary.md) |
-| **03** | *(pending)* | `v1.2.0` | **Advanced PostgreSQL Indexing Suite (B-Tree, GIN, Partial, Expression)**<br>14 production-grade indexes (`sql/03_indexes.sql`) covering composite catalog sorting, hot queue partial indexes, case-insensitive expression indexes (`lower(email)`), and GIN JSONB containment indexing (`jsonb_path_ops`). | 24 / 24 | [Iteration 03 Summary](docs/summaries/iteration_03_summary.md) |
+| **03** | [`96a90a9`](https://github.com/breakingthebot/postgresql-ecommerce-database-build76/commit/96a90a9) | `v1.2.0` | **Advanced PostgreSQL Indexing Suite (B-Tree, GIN, Partial, Expression)**<br>14 production-grade indexes (`sql/03_indexes.sql`) covering composite catalog sorting, hot queue partial indexes, case-insensitive expression indexes (`lower(email)`), and GIN JSONB containment indexing (`jsonb_path_ops`). | 24 / 24 | [Iteration 03 Summary](docs/summaries/iteration_03_summary.md) |
 
 ---
 
@@ -56,7 +56,7 @@ This document logs every incremental engineering iteration and git commit pushed
 ---
 
 ### Iteration 3: Advanced PostgreSQL Indexing Suite (B-Tree, GIN, Partial, Expression)
-- **Git Commit**: *(pending)*
+- **Git Commit**: [`96a90a9`](https://github.com/breakingthebot/postgresql-ecommerce-database-build76/commit/96a90a9)
 - **Tag / Version**: `v1.2.0`
 - **Date**: 2026-09-02
 - **Plain English Summary**:
