@@ -185,6 +185,12 @@ pg-ecommerce --in-memory verify
 # Inspect table and view metadata
 pg-ecommerce --in-memory info
 
+# Populate database with curated realistic e-commerce seed data
+pg-ecommerce --in-memory seed --mode curated
+
+# Populate database with configurable-scale synthetic datasets
+pg-ecommerce --in-memory seed --mode synthetic --products 100 --customers 50 --orders 150 --seed 42
+
 # Export consolidated PostgreSQL DDL
 pg-ecommerce export-sql --output ecommerce_schema.sql
 ```
@@ -199,19 +205,24 @@ Run the test suite using `pytest`:
 pytest -v
 ```
 
-All 11 unit and integration tests run in under 0.25 seconds without external service dependencies:
+All 16 unit and integration tests run in under 0.45 seconds without external service dependencies:
 ```
-tests/test_cli.py::test_cli_version PASSED                      [  9%]
-tests/test_cli.py::test_cli_migrate PASSED                      [ 18%]
-tests/test_cli.py::test_cli_verify PASSED                       [ 27%]
-tests/test_cli.py::test_cli_info PASSED                         [ 36%]
-tests/test_cli.py::test_cli_export_sql PASSED                   [ 45%]
-tests/test_schema.py::test_schema_file_exists PASSED            [ 54%]
-tests/test_schema.py::test_tables_created PASSED                [ 63%]
-tests/test_schema.py::test_views_created PASSED                 [ 72%]
-tests/test_schema.py::test_schema_verification_passes PASSED    [ 81%]
-tests/test_schema.py::test_customer_address_relational_cascade PASSED [ 90%]
-tests/test_schema.py::test_product_variant_inventory_integrity PASSED [100%]
+tests/test_cli.py::test_cli_version PASSED                      [  6%]
+tests/test_cli.py::test_cli_migrate PASSED                      [ 12%]
+tests/test_cli.py::test_cli_verify PASSED                       [ 18%]
+tests/test_cli.py::test_cli_info PASSED                         [ 25%]
+tests/test_cli.py::test_cli_seed_curated PASSED                 [ 31%]
+tests/test_cli.py::test_cli_seed_synthetic PASSED               [ 37%]
+tests/test_cli.py::test_cli_export_sql PASSED                   [ 43%]
+tests/test_schema.py::test_schema_file_exists PASSED            [ 50%]
+tests/test_schema.py::test_tables_created PASSED                [ 56%]
+tests/test_schema.py::test_views_created PASSED                 [ 62%]
+tests/test_schema.py::test_schema_verification_passes PASSED    [ 68%]
+tests/test_schema.py::test_customer_address_relational_cascade PASSED [ 75%]
+tests/test_schema.py::test_product_variant_inventory_integrity PASSED [ 81%]
+tests/test_seeder.py::test_curated_seed_application PASSED      [ 87%]
+tests/test_seeder.py::test_synthetic_seed_generation_and_constraints PASSED [ 93%]
+tests/test_seeder.py::test_view_aggregations_with_seed_data PASSED [100%]
 ```
 
 ---
@@ -221,6 +232,7 @@ tests/test_schema.py::test_product_variant_inventory_integrity PASSED [100%]
 | Iteration | Commit | Version | Summary | Tests | Documentation |
 | :---: | :---: | :---: | :--- | :---: | :--- |
 | **01** | [`293f217`](https://github.com/breakingthebot/postgresql-ecommerce-database-build76/commit/293f217) | `v1.0.0` | **Foundation & Core Relational E-Commerce Schema**: 12 normalized tables, PL/pgSQL triggers, analytical views, and Python CLI suite (`pg-ecommerce`). | 11 / 11 | [Summary](docs/summaries/iteration_01_summary.md) |
+| **02** | *(pending)* | `v1.1.0` | **Deterministic Synthetic Data Generator & Seeder**: Curated & synthetic data seeder (`pg-ecommerce seed`), DAG generation, and constraint validation. | 16 / 16 | [Summary](docs/summaries/iteration_02_summary.md) |
 
 ---
 

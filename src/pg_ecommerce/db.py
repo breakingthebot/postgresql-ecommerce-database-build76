@@ -126,8 +126,10 @@ class DatabaseConnection:
         Translate PostgreSQL-specific DDL syntax to SQLite-compatible syntax
         for zero-dependency testing while preserving pure PostgreSQL SQL files.
         """
+        sql = pg_sql
+
         # Strip DO $$ ... $$; plpgsql blocks
-        sql = re.sub(r'DO\s+\$\$.*?\$\$;', '', pg_sql, flags=re.DOTALL)
+        sql = re.sub(r'DO\s+\$\$.*?\$\$;', '', sql, flags=re.DOTALL)
         # Strip CREATE EXTENSION
         sql = re.sub(r'CREATE\s+EXTENSION\s+.*?;', '', sql, flags=re.IGNORECASE)
         # Strip CREATE OR REPLACE FUNCTION ... LANGUAGE plpgsql;
@@ -138,6 +140,20 @@ class DatabaseConnection:
 
         # Replace CREATE OR REPLACE VIEW with CREATE VIEW IF NOT EXISTS
         sql = re.sub(r'CREATE\s+OR\s+REPLACE\s+VIEW\s+([a-zA-Z0-9_]+)\s+AS', r'CREATE VIEW IF NOT EXISTS \1 AS', sql, flags=re.IGNORECASE)
+
+        # Translate interval arithmetic (e.g. clock_timestamp() - INTERVAL '14 days' + INTERVAL '2 minutes')
+        def replace_clock_interval(m):
+            chain = m.group(1)
+            if not chain.strip():
+                return "(datetime('now'))"
+            modifiers = []
+            for op, val in re.findall(r"([+-])\s*INTERVAL\s*'([^']+)'", chain):
+                sign = '-' if op == '-' else '+'
+                modifiers.append(f"'{sign}{val}'")
+            mod_str = ", ".join(modifiers)
+            return f"datetime('now', {mod_str})"
+
+        sql = re.sub(r"clock_timestamp\(\)((?:\s*[+-]\s*INTERVAL\s*'[^']+')*)", replace_clock_interval, sql, flags=re.IGNORECASE)
 
         # Replace PostgreSQL types
         replacements = [
@@ -170,9 +186,14 @@ class DatabaseConnection:
         # Custom ENUM type column declarations
         sql = re.sub(r'\b(role|status|from_status|to_status|type|discount_type)\s+(user_role|product_status|order_status|address_type|discount_type)\b', r'\1 TEXT', sql, flags=re.IGNORECASE)
 
+        # Convert exact equality checks on calculated currency fields to round() for SQLite float precision
+        sql = re.sub(r'total_amount\s*=\s*\((subtotal[^)]+)\)', r'round(total_amount, 2) = round(\1, 2)', sql)
+        sql = re.sub(r'line_total\s*=\s*\((unit_price[^)]+)\)', r'round(line_total, 2) = round(\1, 2)', sql)
+
         # Clean regex checks that SQLite doesn't natively support without extensions
         sql = re.sub(r'CONSTRAINT\s+chk_customer_email_format\s+CHECK\s+\([^)]+\)', 'CHECK (length(email) > 3)', sql)
-        # Clean ARRAY syntax
+
+        # Clean ARRAY['...'] syntax
         sql = re.sub(r'ARRAY\[.*?\]', "'[]'", sql)
 
         return sql

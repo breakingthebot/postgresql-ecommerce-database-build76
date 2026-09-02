@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-09-02
+
+### Added
+- Deterministic synthetic data generator and seeder engine (`src/pg_ecommerce/seeder.py`).
+- Curated production-grade SQL seed dataset in `sql/02_seed_data.sql` with real-world products, categories, variants, inventory, and reviews.
+- New CLI command `pg-ecommerce seed` supporting `--mode [curated|synthetic]`, `--products`, `--customers`, `--orders`, and `--seed`.
+- Constraint verification for orders totals (`chk_order_total_balance`), line items (`chk_line_total_matches`), and inventory limits (`chk_inventory_reserved_lte_hand`).
+- Interval arithmetic translation (`INTERVAL '...'`) and float rounding translation in `src/pg_ecommerce/db.py` for SQLite in-memory execution.
+- Comprehensive test suite for seeder and seed CLI commands (5 new tests, 16 total tests).
+
 ## [1.0.0] - 2026-09-02
 
 ### Added

@@ -13,6 +13,7 @@ from typing import List, Optional
 from pg_ecommerce import __version__
 from pg_ecommerce.db import DatabaseConnection
 from pg_ecommerce.schema import SchemaManager
+from pg_ecommerce.seeder import DataSeeder
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -49,6 +50,39 @@ def build_parser() -> argparse.ArgumentParser:
 
     # Command: info
     subparsers.add_parser("info", help="Display database metadata, engine type, and table inventory")
+
+    # Command: seed
+    seed_parser = subparsers.add_parser("seed", help="Populate database with curated or synthetic e-commerce data")
+    seed_parser.add_argument(
+        "--mode",
+        choices=["curated", "synthetic"],
+        default="curated",
+        help="Seeding mode: 'curated' (rich SQL seed) or 'synthetic' (configurable volume generator)",
+    )
+    seed_parser.add_argument(
+        "--products",
+        type=int,
+        default=50,
+        help="Number of products to generate (synthetic mode only)",
+    )
+    seed_parser.add_argument(
+        "--customers",
+        type=int,
+        default=30,
+        help="Number of customers to generate (synthetic mode only)",
+    )
+    seed_parser.add_argument(
+        "--orders",
+        type=int,
+        default=60,
+        help="Number of orders to generate (synthetic mode only)",
+    )
+    seed_parser.add_argument(
+        "--seed",
+        type=int,
+        default=42,
+        help="Deterministic random seed for reproducibility",
+    )
 
     # Command: export-sql
     export_parser = subparsers.add_parser("export-sql", help="Concatenate and output raw SQL files")
@@ -91,7 +125,6 @@ def main(args: Optional[List[str]] = None) -> int:
                 return 1
 
         elif parsed_args.command == "verify":
-            # Ensure schema is applied for verification if using in-memory
             if db.in_memory and len(schema_mgr.get_tables()) == 0:
                 schema_mgr.apply_schema("01_schema.sql")
             report = schema_mgr.verify_schema()
@@ -110,6 +143,28 @@ def main(args: Optional[List[str]] = None) -> int:
             print(f"Total Views:     {len(views)}")
             for vw in views:
                 print(f"  - {vw}")
+            return 0
+
+        elif parsed_args.command == "seed":
+            if db.in_memory and len(schema_mgr.get_tables()) == 0:
+                schema_mgr.apply_schema("01_schema.sql")
+
+            seeder = DataSeeder(db=db, seed=parsed_args.seed)
+            if parsed_args.mode == "curated":
+                print(f"[*] Applying curated seed data from sql/02_seed_data.sql...")
+                seeder.apply_curated_seed()
+            else:
+                print(f"[*] Generating synthetic dataset: {parsed_args.products} products, {parsed_args.customers} customers, {parsed_args.orders} orders (seed={parsed_args.seed})...")
+                seeder.generate_synthetic_dataset(
+                    num_products=parsed_args.products,
+                    num_customers=parsed_args.customers,
+                    num_orders=parsed_args.orders,
+                )
+
+            counts = seeder.get_table_counts()
+            print(f"[+] Seeding complete! Populated row counts:")
+            for tbl, count in counts.items():
+                print(f"  - {tbl:22}: {count} rows")
             return 0
 
         elif parsed_args.command == "export-sql":
