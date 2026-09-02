@@ -191,6 +191,15 @@ pg-ecommerce --in-memory seed --mode curated
 # Populate database with configurable-scale synthetic datasets
 pg-ecommerce --in-memory seed --mode synthetic --products 100 --customers 50 --orders 150 --seed 42
 
+# Apply advanced composite, partial, expression, and GIN indexes
+pg-ecommerce --in-memory indexes --apply
+
+# List all active database indexes
+pg-ecommerce --in-memory indexes --list
+
+# Verify index catalog integrity
+pg-ecommerce --in-memory indexes --verify
+
 # Export consolidated PostgreSQL DDL
 pg-ecommerce export-sql --output ecommerce_schema.sql
 ```
@@ -205,23 +214,31 @@ Run the test suite using `pytest`:
 pytest -v
 ```
 
-All 16 unit and integration tests run in under 0.45 seconds without external service dependencies:
+All 24 unit and integration tests run in under 0.60 seconds without external service dependencies:
 ```
-tests/test_cli.py::test_cli_version PASSED                      [  6%]
-tests/test_cli.py::test_cli_migrate PASSED                      [ 12%]
-tests/test_cli.py::test_cli_verify PASSED                       [ 18%]
-tests/test_cli.py::test_cli_info PASSED                         [ 25%]
-tests/test_cli.py::test_cli_seed_curated PASSED                 [ 31%]
-tests/test_cli.py::test_cli_seed_synthetic PASSED               [ 37%]
-tests/test_cli.py::test_cli_export_sql PASSED                   [ 43%]
-tests/test_schema.py::test_schema_file_exists PASSED            [ 50%]
-tests/test_schema.py::test_tables_created PASSED                [ 56%]
-tests/test_schema.py::test_views_created PASSED                 [ 62%]
-tests/test_schema.py::test_schema_verification_passes PASSED    [ 68%]
-tests/test_schema.py::test_customer_address_relational_cascade PASSED [ 75%]
-tests/test_schema.py::test_product_variant_inventory_integrity PASSED [ 81%]
-tests/test_seeder.py::test_curated_seed_application PASSED      [ 87%]
-tests/test_seeder.py::test_synthetic_seed_generation_and_constraints PASSED [ 93%]
+tests/test_cli.py::test_cli_version PASSED                      [  4%]
+tests/test_cli.py::test_cli_migrate PASSED                      [  8%]
+tests/test_cli.py::test_cli_verify PASSED                       [ 12%]
+tests/test_cli.py::test_cli_info PASSED                         [ 16%]
+tests/test_cli.py::test_cli_seed_curated PASSED                 [ 20%]
+tests/test_cli.py::test_cli_seed_synthetic PASSED               [ 25%]
+tests/test_cli.py::test_cli_indexes_apply_and_verify PASSED     [ 29%]
+tests/test_cli.py::test_cli_indexes_list PASSED                 [ 33%]
+tests/test_cli.py::test_cli_export_sql PASSED                   [ 37%]
+tests/test_indexes.py::test_index_file_contents PASSED          [ 41%]
+tests/test_indexes.py::test_all_expected_indexes_created PASSED [ 45%]
+tests/test_indexes.py::test_composite_catalog_index_usage PASSED [ 50%]
+tests/test_indexes.py::test_expression_index_case_insensitive_email PASSED [ 54%]
+tests/test_indexes.py::test_partial_index_unfulfilled_orders PASSED [ 58%]
+tests/test_indexes.py::test_partial_index_inventory_reorder_alerts PASSED [ 62%]
+tests/test_schema.py::test_schema_file_exists PASSED            [ 66%]
+tests/test_schema.py::test_tables_created PASSED                [ 70%]
+tests/test_schema.py::test_views_created PASSED                 [ 75%]
+tests/test_schema.py::test_schema_verification_passes PASSED    [ 79%]
+tests/test_schema.py::test_customer_address_relational_cascade PASSED [ 83%]
+tests/test_schema.py::test_product_variant_inventory_integrity PASSED [ 87%]
+tests/test_seeder.py::test_curated_seed_application PASSED      [ 91%]
+tests/test_seeder.py::test_synthetic_seed_generation_and_constraints PASSED [ 95%]
 tests/test_seeder.py::test_view_aggregations_with_seed_data PASSED [100%]
 ```
 
@@ -233,6 +250,7 @@ tests/test_seeder.py::test_view_aggregations_with_seed_data PASSED [100%]
 | :---: | :---: | :---: | :--- | :---: | :--- |
 | **01** | [`293f217`](https://github.com/breakingthebot/postgresql-ecommerce-database-build76/commit/293f217) | `v1.0.0` | **Foundation & Core Relational E-Commerce Schema**: 12 normalized tables, PL/pgSQL triggers, analytical views, and Python CLI suite (`pg-ecommerce`). | 11 / 11 | [Summary](docs/summaries/iteration_01_summary.md) |
 | **02** | [`07a98fa`](https://github.com/breakingthebot/postgresql-ecommerce-database-build76/commit/07a98fa) | `v1.1.0` | **Deterministic Synthetic Data Generator & Seeder**: Curated & synthetic data seeder (`pg-ecommerce seed`), DAG generation, and constraint validation. | 16 / 16 | [Summary](docs/summaries/iteration_02_summary.md) |
+| **03** | *(pending)* | `v1.2.0` | **Advanced PostgreSQL Indexing Suite**: 14 composite B-Tree, partial, expression, and GIN JSONB containment indexes (`sql/03_indexes.sql`). | 24 / 24 | [Summary](docs/summaries/iteration_03_summary.md) |
 
 ---
 

@@ -190,6 +190,13 @@ class DatabaseConnection:
         sql = re.sub(r'total_amount\s*=\s*\((subtotal[^)]+)\)', r'round(total_amount, 2) = round(\1, 2)', sql)
         sql = re.sub(r'line_total\s*=\s*\((unit_price[^)]+)\)', r'round(line_total, 2) = round(\1, 2)', sql)
 
+        # Translate PostgreSQL USING GIN indexes to SQLite standard indexes
+        sql = re.sub(r'USING\s+gin\s*\(([^)]+?)(?:\s+jsonb_path_ops)?\)', r'(\1)', sql, flags=re.IGNORECASE)
+
+        # Translate boolean comparisons in WHERE clauses: "= true" -> "= 1"
+        sql = re.sub(r'=\s*true\b', '= 1', sql, flags=re.IGNORECASE)
+        sql = re.sub(r'=\s*false\b', '= 0', sql, flags=re.IGNORECASE)
+
         # Clean regex checks that SQLite doesn't natively support without extensions
         sql = re.sub(r'CONSTRAINT\s+chk_customer_email_format\s+CHECK\s+\([^)]+\)', 'CHECK (length(email) > 3)', sql)
 

@@ -66,6 +66,25 @@ def test_cli_seed_synthetic(capsys):
     assert "orders                : 20 rows" in captured.out
 
 
+def test_cli_indexes_apply_and_verify(capsys):
+    """Test pg-ecommerce indexes --apply and --verify."""
+    exit_code = main(["--in-memory", "indexes", "--apply", "--verify"])
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert "[+] Advanced indexes applied successfully!" in captured.out
+    assert '"is_valid": true' in captured.out
+    assert '"idx_products_category_status_price"' in captured.out
+
+
+def test_cli_indexes_list(capsys):
+    """Test pg-ecommerce indexes --list prints active index inventory."""
+    exit_code = main(["--in-memory", "indexes", "--list"])
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert "Total Custom Indexes:" in captured.out
+    assert "idx_orders_customer_placed_at" in captured.out
+
+
 def test_cli_export_sql(capsys):
     """Test pg-ecommerce export-sql outputs SQL script."""
     exit_code = main(["export-sql"])

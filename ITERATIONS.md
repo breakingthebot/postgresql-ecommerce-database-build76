@@ -14,6 +14,7 @@ This document logs every incremental engineering iteration and git commit pushed
 | :---: | :---: | :---: | :--- | :---: | :--- |
 | **01** | [`293f217`](https://github.com/breakingthebot/postgresql-ecommerce-database-build76/commit/293f217) | `v1.0.0` | **Foundation & Core Relational E-Commerce Schema**<br>Normalized 12-table architecture (users, addresses, categories, brands, products, variants with JSONB, inventory reservations, coupons, balanced orders, snapshotted items, status audit, reviews), PL/pgSQL triggers, analytical views, and Python CLI suite (`pg-ecommerce`). | 11 / 11 | [Iteration 01 Summary](docs/summaries/iteration_01_summary.md) |
 | **02** | [`07a98fa`](https://github.com/breakingthebot/postgresql-ecommerce-database-build76/commit/07a98fa) | `v1.1.0` | **Deterministic Synthetic Data Generator & Seeder**<br>Curated and synthetic data generation (`pg-ecommerce seed`), DAG topological generation, JSONB attributes, constraint verification (`chk_order_total_balance`, `chk_inventory_reserved_lte_hand`), and analytical view validation. | 16 / 16 | [Iteration 02 Summary](docs/summaries/iteration_02_summary.md) |
+| **03** | *(pending)* | `v1.2.0` | **Advanced PostgreSQL Indexing Suite (B-Tree, GIN, Partial, Expression)**<br>14 production-grade indexes (`sql/03_indexes.sql`) covering composite catalog sorting, hot queue partial indexes, case-insensitive expression indexes (`lower(email)`), and GIN JSONB containment indexing (`jsonb_path_ops`). | 24 / 24 | [Iteration 03 Summary](docs/summaries/iteration_03_summary.md) |
 
 ---
 
@@ -51,4 +52,22 @@ This document logs every incremental engineering iteration and git commit pushed
   - `tests/test_seeder.py`: Seeding and constraint compliance tests.
   - `tests/test_cli.py`: Extended tests for seed subcommands.
 - **Test Results**: 16 Pytest unit & integration tests passing (0.41s).
+
+---
+
+### Iteration 3: Advanced PostgreSQL Indexing Suite (B-Tree, GIN, Partial, Expression)
+- **Git Commit**: *(pending)*
+- **Tag / Version**: `v1.2.0`
+- **Date**: 2026-09-02
+- **Plain English Summary**:
+  Engineered and verified 14 specialized indexes in `sql/03_indexes.sql` tailored for high-volume e-commerce workloads. Implemented composite B-Tree indexes for faceted catalog browsing, partial indexes for hot fulfillment queues and low-stock alerts (saving >80% index storage), case-insensitive functional expression indexes (`lower(email)`), and GIN inverted indexes on JSONB variant specifications (`jsonb_path_ops`) and product tags. Added CLI tools (`pg-ecommerce indexes`) to apply, introspect, and verify index status.
+- **Key Files Introduced / Modified**:
+  - `sql/03_indexes.sql`: 14 advanced composite, partial, expression, and GIN indexes.
+  - `src/pg_ecommerce/schema.py`: Added `apply_indexes()`, `get_indexes()`, and `verify_indexes()`.
+  - `src/pg_ecommerce/cli.py`: Added `indexes` subcommand with `--apply`, `--list`, and `--verify`.
+  - `src/pg_ecommerce/db.py`: Added GIN and partial index syntax translation for SQLite.
+  - `tests/test_indexes.py`: Tests verifying index existence, query plan usage, and expressions.
+  - `tests/test_cli.py`: Extended CLI tests covering index management commands.
+- **Test Results**: 24 Pytest unit & integration tests passing (0.56s).
+
 

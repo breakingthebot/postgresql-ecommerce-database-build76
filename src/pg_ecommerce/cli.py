@@ -84,6 +84,24 @@ def build_parser() -> argparse.ArgumentParser:
         help="Deterministic random seed for reproducibility",
     )
 
+    # Command: indexes
+    idx_parser = subparsers.add_parser("indexes", help="Manage and verify advanced PostgreSQL indexes")
+    idx_parser.add_argument(
+        "--apply",
+        action="store_true",
+        help="Apply advanced indexes from sql/03_indexes.sql",
+    )
+    idx_parser.add_argument(
+        "--list",
+        action="store_true",
+        help="List all active database indexes and their target tables",
+    )
+    idx_parser.add_argument(
+        "--verify",
+        action="store_true",
+        help="Verify all expected composite, partial, expression, and GIN indexes exist",
+    )
+
     # Command: export-sql
     export_parser = subparsers.add_parser("export-sql", help="Concatenate and output raw SQL files")
     export_parser.add_argument(
@@ -165,6 +183,34 @@ def main(args: Optional[List[str]] = None) -> int:
             print(f"[+] Seeding complete! Populated row counts:")
             for tbl, count in counts.items():
                 print(f"  - {tbl:22}: {count} rows")
+            return 0
+
+        elif parsed_args.command == "indexes":
+            if db.in_memory and len(schema_mgr.get_tables()) == 0:
+                schema_mgr.apply_schema("01_schema.sql")
+
+            if parsed_args.apply:
+                print(f"[*] Applying advanced indexes from sql/03_indexes.sql...")
+                schema_mgr.apply_indexes("03_indexes.sql")
+                print(f"[+] Advanced indexes applied successfully!")
+
+            if parsed_args.verify:
+                # If indexes haven't been applied yet in in-memory mode, apply them
+                if db.in_memory and len(schema_mgr.get_indexes()) == 0:
+                    schema_mgr.apply_indexes("03_indexes.sql")
+                report = schema_mgr.verify_indexes()
+                print(json.dumps(report, indent=2))
+                return 0 if report["is_valid"] else 1
+
+            if parsed_args.list or (not parsed_args.apply and not parsed_args.verify):
+                if db.in_memory and len(schema_mgr.get_indexes()) == 0:
+                    schema_mgr.apply_indexes("03_indexes.sql")
+                indexes = schema_mgr.get_indexes()
+                print(f"Total Custom Indexes: {len(indexes)}")
+                for idx in indexes:
+                    print(f"  - {idx['name']:36} ON {idx['table_name']}")
+                return 0
+
             return 0
 
         elif parsed_args.command == "export-sql":

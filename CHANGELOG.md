@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-09-02
+
+### Added
+- Advanced indexing suite in `sql/03_indexes.sql` featuring 14 production indexes:
+  - Composite B-Tree indexes: `idx_products_category_status_price`, `idx_orders_customer_placed_at`, `idx_order_items_order_variant`, `idx_reviews_product_rating_helpful`, and `idx_categories_parent_path`.
+  - Partial indexes: `idx_orders_unfulfilled_queue` (excluding >80% fulfilled orders), `idx_products_active_featured`, `idx_inventory_reorder_alerts`, and `idx_coupons_active_valid`.
+  - Expression / Functional indexes: `idx_customers_lower_email` and `idx_variants_lower_sku` for fast case-insensitive lookups.
+  - GIN indexes: `idx_variants_attributes_gin` (`jsonb_path_ops` for fast JSONB containment `@>`), `idx_products_tags_gin` (array overlap), and `idx_orders_shipping_address_gin`.
+- Index inspection and verification methods in `SchemaManager` (`apply_indexes`, `get_indexes`, `verify_indexes`).
+- New CLI command `pg-ecommerce indexes` with `--apply`, `--list`, and `--verify` actions.
+- GIN and partial index SQL syntax translation in `src/pg_ecommerce/db.py` for SQLite in-memory execution.
+- Comprehensive unit test suite covering index creation, plan inspection, and expression lookups (8 new tests, 24 total tests).
+
 ## [1.1.0] - 2026-09-02
 
 ### Added
