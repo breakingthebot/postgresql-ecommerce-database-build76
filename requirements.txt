@@ -1,0 +1,4 @@
+# Core test and runtime dependencies
+pytest>=8.0.0
+# Optional real PostgreSQL driver (binary wheels)
+# psycopg[binary]>=3.1.18

@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pg-ecommerce"
+version = "1.0.0"
+description = "Production-grade PostgreSQL e-commerce database with complex schemas, indexing, full-text search, and query optimization"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "BreakingTheBot"}
+]
+keywords = ["postgresql", "database", "ecommerce", "full-text-search", "indexing", "sql", "query-optimization"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Database",
+]
+dependencies = []
+
+[project.optional-dependencies]
+postgres = [
+    "psycopg[binary]>=3.1.18",
+]
+dev = [
+    "pytest>=8.0.0",
+]
+
+[project.scripts]
+pg-ecommerce = "pg_ecommerce.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
