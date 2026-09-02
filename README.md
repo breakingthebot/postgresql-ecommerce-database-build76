@@ -232,7 +232,7 @@ tests/test_seeder.py::test_view_aggregations_with_seed_data PASSED [100%]
 | Iteration | Commit | Version | Summary | Tests | Documentation |
 | :---: | :---: | :---: | :--- | :---: | :--- |
 | **01** | [`293f217`](https://github.com/breakingthebot/postgresql-ecommerce-database-build76/commit/293f217) | `v1.0.0` | **Foundation & Core Relational E-Commerce Schema**: 12 normalized tables, PL/pgSQL triggers, analytical views, and Python CLI suite (`pg-ecommerce`). | 11 / 11 | [Summary](docs/summaries/iteration_01_summary.md) |
-| **02** | *(pending)* | `v1.1.0` | **Deterministic Synthetic Data Generator & Seeder**: Curated & synthetic data seeder (`pg-ecommerce seed`), DAG generation, and constraint validation. | 16 / 16 | [Summary](docs/summaries/iteration_02_summary.md) |
+| **02** | [`07a98fa`](https://github.com/breakingthebot/postgresql-ecommerce-database-build76/commit/07a98fa) | `v1.1.0` | **Deterministic Synthetic Data Generator & Seeder**: Curated & synthetic data seeder (`pg-ecommerce seed`), DAG generation, and constraint validation. | 16 / 16 | [Summary](docs/summaries/iteration_02_summary.md) |
 
 ---
 

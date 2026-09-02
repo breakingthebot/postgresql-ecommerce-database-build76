@@ -13,7 +13,7 @@ This document logs every incremental engineering iteration and git commit pushed
 | Iteration | Git Commit | Version | Focus / Summary | Tests Passed | Full Summary Archive |
 | :---: | :---: | :---: | :--- | :---: | :--- |
 | **01** | [`293f217`](https://github.com/breakingthebot/postgresql-ecommerce-database-build76/commit/293f217) | `v1.0.0` | **Foundation & Core Relational E-Commerce Schema**<br>Normalized 12-table architecture (users, addresses, categories, brands, products, variants with JSONB, inventory reservations, coupons, balanced orders, snapshotted items, status audit, reviews), PL/pgSQL triggers, analytical views, and Python CLI suite (`pg-ecommerce`). | 11 / 11 | [Iteration 01 Summary](docs/summaries/iteration_01_summary.md) |
-| **02** | *(pending)* | `v1.1.0` | **Deterministic Synthetic Data Generator & Seeder**<br>Curated and synthetic data generation (`pg-ecommerce seed`), DAG topological generation, JSONB attributes, constraint verification (`chk_order_total_balance`, `chk_inventory_reserved_lte_hand`), and analytical view validation. | 16 / 16 | [Iteration 02 Summary](docs/summaries/iteration_02_summary.md) |
+| **02** | [`07a98fa`](https://github.com/breakingthebot/postgresql-ecommerce-database-build76/commit/07a98fa) | `v1.1.0` | **Deterministic Synthetic Data Generator & Seeder**<br>Curated and synthetic data generation (`pg-ecommerce seed`), DAG topological generation, JSONB attributes, constraint verification (`chk_order_total_balance`, `chk_inventory_reserved_lte_hand`), and analytical view validation. | 16 / 16 | [Iteration 02 Summary](docs/summaries/iteration_02_summary.md) |
 
 ---
 
@@ -38,7 +38,7 @@ This document logs every incremental engineering iteration and git commit pushed
 ---
 
 ### Iteration 2: Deterministic Synthetic Data Generator & Seeder
-- **Git Commit**: *(pending)*
+- **Git Commit**: [`07a98fa`](https://github.com/breakingthebot/postgresql-ecommerce-database-build76/commit/07a98fa)
 - **Tag / Version**: `v1.1.0`
 - **Date**: 2026-09-02
 - **Plain English Summary**:
